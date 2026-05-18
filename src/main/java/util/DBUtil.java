@@ -15,7 +15,7 @@ public class DBUtil {
 
 	static String user="root";
 	static String password="123456";
-	static String url="jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8";
+	static String url="jdbc:mysql://localhost:3306/springbootohu22anl?useUnicode=true&characterEncoding=utf8";
 	
 	
 //	建立数据库连接并返回一个 Connection 对象。
