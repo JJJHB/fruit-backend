@@ -26,6 +26,12 @@ public class UserQueryListServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // ✅ 设置跨域头
+        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:8081"); // 前端地址
+        resp.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        resp.setHeader("Access-Control-Allow-Credentials", "true"); // 如果前端要发送 cookie
+
         // 设置响应类型为 JSON
         resp.setContentType("application/json;charset=utf-8");
 
@@ -34,7 +40,7 @@ public class UserQueryListServlet extends HttpServlet {
         // 转换为 JSONArray
         JSONArray ja = JSONArray.fromObject(users);
 
-        // 包装成一个 JSON 对象（可选）
+        // 包装成一个 JSON 对象
         JSONObject result = new JSONObject();
         result.put("users", ja);
         result.put("total", users.size()); // 总条数
@@ -43,5 +49,15 @@ public class UserQueryListServlet extends HttpServlet {
         out.print(result.toString());
         out.flush();
         out.close();
+    }
+
+    // ✅ 处理 OPTIONS 预检请求（必要）
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
+        resp.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
 }
