@@ -17,7 +17,7 @@ public class CorsFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
 
         // 设置跨域头
-        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
         resp.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
         resp.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
         resp.setHeader("Access-Control-Allow-Credentials", "true");
