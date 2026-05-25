@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-23">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk11.0.29">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
@@ -26,5 +26,6 @@
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/taglibs-standard-impl-1.2.1.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/taglibs-standard-jstlel-1.2.1.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/taglibs-standard-spec-1.2.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/fastjson-1.2.83.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
