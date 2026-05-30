@@ -9,7 +9,7 @@ import java.sql.Statement;
 public class DBUtil {
 
     static String user = "root";
-    static String password = "123456";
+    static String password = "root";
     // MySQL5 兼容 URL：关闭 SSL + UTF-8 编码
     static String url = "jdbc:mysql://localhost:3306/springbootohu22anl?useUnicode=true&characterEncoding=utf8&useSSL=false";
 
