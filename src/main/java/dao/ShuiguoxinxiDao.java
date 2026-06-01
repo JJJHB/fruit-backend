@@ -16,7 +16,7 @@ public class ShuiguoxinxiDao {
         Statement stmt = null;
         ResultSet rs = null;
 
-        String sql = "SELECT * FROM shuiguoxinxi";
+        String sql = "SELECT id, name, price, stock, category_id, picture, detail, clicknum FROM shuiguoxinxi";
 
         try {
             stmt = conn.createStatement();
@@ -24,25 +24,13 @@ public class ShuiguoxinxiDao {
             while (rs.next()) {
                 ShuiguoxinxiEntity obj = new ShuiguoxinxiEntity();
                 obj.setId(rs.getLong("id"));
-                obj.setAddtime(rs.getTimestamp("addtime"));
-                obj.setShuiguomingcheng(rs.getString("shuiguomingcheng"));
-                obj.setShuiguofenlei(rs.getString("shuiguofenlei"));
-                obj.setChandi(rs.getString("chandi"));
-                obj.setGuige(rs.getString("guige"));
-                obj.setCaizhairiqi(rs.getTimestamp("caizhairiqi"));
-                obj.setBaozhiqi(rs.getString("baozhiqi"));
-                obj.setShuiguojieshao(rs.getString("shuiguojieshao"));
-                obj.setShuiguotupian(rs.getString("shuiguotupian"));
-                obj.setOnelimittimes(rs.getInt("onelimittimes"));
-                obj.setAlllimittimes(rs.getInt("alllimittimes"));
-                obj.setThumbsupnum(rs.getInt("thumbsupnum"));
-                obj.setCrazilynum(rs.getInt("crazilynum"));
-                obj.setClicktime(rs.getTimestamp("clicktime"));
-                obj.setClicknum(rs.getInt("clicknum"));
-                obj.setDiscussnum(rs.getInt("discussnum"));
+                obj.setName(rs.getString("name"));
                 obj.setPrice(rs.getDouble("price"));
-                obj.setOnshelves(rs.getInt("onshelves"));
-                obj.setStoreupnum(rs.getInt("storeupnum"));
+                obj.setStock(rs.getInt("stock"));
+                obj.setCategoryId(rs.getInt("category_id"));
+                obj.setPicture(rs.getString("picture"));
+                obj.setDetail(rs.getString("detail"));
+                obj.setClicknum(rs.getInt("clicknum"));
 
                 list.add(obj);
             }
@@ -51,26 +39,23 @@ public class ShuiguoxinxiDao {
         } finally {
             DBUtil.closeJDBC(rs, stmt, conn);
         }
-
         return list;
     }
 
-    // ===================== 【新加：条件查询方法】 =====================
-    public List<ShuiguoxinxiEntity> queryByCondition(String name, String chandi, String minPrice, String maxPrice) {
+    // 条件查询
+    public List<ShuiguoxinxiEntity> queryByCondition(String name, String minPrice, String maxPrice) {
         List<ShuiguoxinxiEntity> list = new ArrayList<>();
         Connection conn = DBUtil.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         try {
-            // 动态拼接 SQL
-            StringBuilder sql = new StringBuilder("SELECT * FROM shuiguoxinxi WHERE 1=1 ");
+            StringBuilder sql = new StringBuilder(
+                "SELECT id, name, price, stock, category_id, picture, detail, clicknum FROM shuiguoxinxi WHERE 1=1 "
+            );
 
             if (name != null && !name.trim().isEmpty()) {
-                sql.append("AND shuiguomingcheng LIKE ? ");
-            }
-            if (chandi != null && !chandi.trim().isEmpty()) {
-                sql.append("AND chandi LIKE ? ");
+                sql.append("AND name LIKE ? ");
             }
             if (minPrice != null && !minPrice.trim().isEmpty()) {
                 sql.append("AND price >= ? ");
@@ -82,12 +67,8 @@ public class ShuiguoxinxiDao {
             ps = conn.prepareStatement(sql.toString());
             int index = 1;
 
-            // 设置参数
             if (name != null && !name.trim().isEmpty()) {
                 ps.setString(index++, "%" + name + "%");
-            }
-            if (chandi != null && !chandi.trim().isEmpty()) {
-                ps.setString(index++, "%" + chandi + "%");
             }
             if (minPrice != null && !minPrice.trim().isEmpty()) {
                 ps.setDouble(index++, Double.parseDouble(minPrice));
@@ -98,30 +79,16 @@ public class ShuiguoxinxiDao {
 
             rs = ps.executeQuery();
 
-            // 封装结果（完全和你原来的字段一致）
             while (rs.next()) {
                 ShuiguoxinxiEntity obj = new ShuiguoxinxiEntity();
                 obj.setId(rs.getLong("id"));
-                obj.setAddtime(rs.getTimestamp("addtime"));
-                obj.setShuiguomingcheng(rs.getString("shuiguomingcheng"));
-                obj.setShuiguofenlei(rs.getString("shuiguofenlei"));
-                obj.setChandi(rs.getString("chandi"));
-                obj.setGuige(rs.getString("guige"));
-                obj.setCaizhairiqi(rs.getTimestamp("caizhairiqi"));
-                obj.setBaozhiqi(rs.getString("baozhiqi"));
-                obj.setShuiguojieshao(rs.getString("shuiguojieshao"));
-                obj.setShuiguotupian(rs.getString("shuiguotupian"));
-                obj.setOnelimittimes(rs.getInt("onelimittimes"));
-                obj.setAlllimittimes(rs.getInt("alllimittimes"));
-                obj.setThumbsupnum(rs.getInt("thumbsupnum"));
-                obj.setCrazilynum(rs.getInt("crazilynum"));
-                obj.setClicktime(rs.getTimestamp("clicktime"));
-                obj.setClicknum(rs.getInt("clicknum"));
-                obj.setDiscussnum(rs.getInt("discussnum"));
+                obj.setName(rs.getString("name"));
                 obj.setPrice(rs.getDouble("price"));
-                obj.setOnshelves(rs.getInt("onshelves"));
-                obj.setStoreupnum(rs.getInt("storeupnum"));
-
+                obj.setStock(rs.getInt("stock"));
+                obj.setCategoryId(rs.getInt("category_id"));
+                obj.setPicture(rs.getString("picture"));
+                obj.setDetail(rs.getString("detail"));
+                obj.setClicknum(rs.getInt("clicknum"));
                 list.add(obj);
             }
 
@@ -130,71 +97,55 @@ public class ShuiguoxinxiDao {
         } finally {
             DBUtil.closeJDBC(rs, ps, conn);
         }
-
         return list;
     }
-    
-    public void addFruit(ShuiguoxinxiEntity fruit) {
-        Connection conn = DBUtil.getConnection();
-        String sql = "INSERT INTO shuiguoxinxi (addtime,shuiguomingcheng,shuiguofenlei,chandi,price,alllimittimes,shuiguotupian,onshelves) VALUES (?,?,?,?,?,?,?,?)";
 
-        try {
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setTimestamp(1, new java.sql.Timestamp(fruit.getAddtime().getTime()));
-            ps.setString(2, fruit.getShuiguomingcheng());
-            ps.setString(3, fruit.getShuiguofenlei());
-            ps.setString(4, fruit.getChandi());
-            ps.setDouble(5, fruit.getPrice());
-            ps.setInt(6, fruit.getAlllimittimes());
-            ps.setString(7, fruit.getShuiguotupian());
-            ps.setInt(8, fruit.getOnshelves());
+	 // 新增水果
+	    public void addFruit(ShuiguoxinxiEntity fruit) {
+	        String sql = "INSERT INTO shuiguoxinxi (name, price, stock, category_id, picture, detail, clicknum) VALUES (?,?,?,?,?,?,?)";
+	        try (Connection conn = DBUtil.getConnection();
+	             PreparedStatement ps = conn.prepareStatement(sql)) {
+	
+	            ps.setString(1, fruit.getName());
+	            ps.setDouble(2, fruit.getPrice());
+	            ps.setInt(3, fruit.getStock());
+	            ps.setInt(4, fruit.getCategoryId());
+	            ps.setString(5, fruit.getPicture());
+	            ps.setString(6, fruit.getDetail());
+	            ps.setInt(7, fruit.getClicknum());
+	            ps.executeUpdate();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
 
-            ps.executeUpdate(); // 执行插入
-            ps.close();
-            conn.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
+    // 修改水果
     public void updateFruit(ShuiguoxinxiEntity fruit) {
-        String sql = "UPDATE shuiguoxinxi SET shuiguomingcheng=?, shuiguofenlei=?, chandi=?, price=?, alllimittimes=?, shuiguotupian=? WHERE id=?";
-
+        String sql = "UPDATE shuiguoxinxi SET name=?, price=?, stock=?, category_id=?, picture=?, detail=?, clicknum=? WHERE id=?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, fruit.getShuiguomingcheng());
-            pstmt.setString(2, fruit.getShuiguofenlei());
-            pstmt.setString(3, fruit.getChandi());
-
-            // 价格字段兼容处理
-            if (fruit.getPrice() != null) {
-                pstmt.setDouble(4, fruit.getPrice().doubleValue());
-            } else {
-                pstmt.setNull(4, java.sql.Types.DECIMAL);
-            }
-
-            pstmt.setInt(5, fruit.getAlllimittimes());
-            pstmt.setString(6, fruit.getShuiguotupian());
-
-            // 修正：id是Long类型，使用setLong
-            pstmt.setLong(7, fruit.getId());
-
+            pstmt.setString(1, fruit.getName());
+            pstmt.setDouble(2, fruit.getPrice());
+            pstmt.setInt(3, fruit.getStock());
+            pstmt.setInt(4, fruit.getCategoryId());
+            pstmt.setString(5, fruit.getPicture());
+            pstmt.setString(6, fruit.getDetail());
+            pstmt.setInt(7, fruit.getClicknum());
+            pstmt.setLong(8, fruit.getId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
- // 删除水果
+
+    // 删除水果
     public void deleteFruit(Long id) {
         String sql = "DELETE FROM shuiguoxinxi WHERE id=?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
