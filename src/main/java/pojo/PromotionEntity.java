@@ -4,30 +4,30 @@ import java.util.Date;
 
 public class PromotionEntity {
     private Integer id;
-    private Date addtime;
-    private String shuiguomingcheng;
-    private String shuiguofenlei;
-    private String chandi;
-    private Double price; // 新增价格
+    private Integer fruitId;      // 对应 fruit_id
+    private String title;         // 对应 title
+    private Double discountPrice; // 对应 discount_price
+    private Date startTime;       // 对应 start_time
+    private Date endTime;         // 对应 end_time
 
     public PromotionEntity() {}
 
+    // Getter / Setter
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public Date getAddtime() { return addtime; }
-    public void setAddtime(Date addtime) { this.addtime = addtime; }
+    public Integer getFruitId() { return fruitId; }
+    public void setFruitId(Integer fruitId) { this.fruitId = fruitId; }
 
-    public String getShuiguomingcheng() { return shuiguomingcheng; }
-    public void setShuiguomingcheng(String shuiguomingcheng) { this.shuiguomingcheng = shuiguomingcheng; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public String getShuiguofenlei() { return shuiguofenlei; }
-    public void setShuiguofenlei(String shuiguofenlei) { this.shuiguofenlei = shuiguofenlei; }
+    public Double getDiscountPrice() { return discountPrice; }
+    public void setDiscountPrice(Double discountPrice) { this.discountPrice = discountPrice; }
 
-    public String getChandi() { return chandi; }
-    public void setChandi(String chandi) { this.chandi = chandi; }
+    public Date getStartTime() { return startTime; }
+    public void setStartTime(Date startTime) { this.startTime = startTime; }
 
-    // 价格 get/set
-    public Double getPrice() { return price; }
-    public void setPrice(Double price) { this.price = price; }
+    public Date getEndTime() { return endTime; }
+    public void setEndTime(Date endTime) { this.endTime = endTime; }
 }

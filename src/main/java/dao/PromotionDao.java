@@ -10,8 +10,8 @@ import java.util.List;
 
 public class PromotionDao {
 
-    // 条件查询（返回所有字段，含 price）
-    public List<PromotionEntity> getPromotionByCondition(String shuiguomingcheng, String chandi, String shuiguofenlei) {
+    // 条件查询（按 title / fruit_id 模糊匹配）
+    public List<PromotionEntity> getPromotionByCondition(String title, Integer fruitId) {
         List<PromotionEntity> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -19,39 +19,33 @@ public class PromotionDao {
         try {
             conn = DBUtil.getConnection();
             StringBuilder sql = new StringBuilder(
-                "SELECT id, addtime, shuiguomingcheng, shuiguofenlei, chandi, price FROM cuxiaohuodong WHERE 1=1");
+                "SELECT id, fruit_id, title, discount_price, start_time, end_time FROM cuxiaohuodong WHERE 1=1");
 
-            if (shuiguomingcheng != null && !shuiguomingcheng.isEmpty()) {
-                sql.append(" AND shuiguomingcheng LIKE ?");
+            if (title != null && !title.isEmpty()) {
+                sql.append(" AND title LIKE ?");
             }
-            if (chandi != null && !chandi.isEmpty()) {
-                sql.append(" AND chandi LIKE ?");
-            }
-            if (shuiguofenlei != null && !shuiguofenlei.isEmpty()) {
-                sql.append(" AND shuiguofenlei LIKE ?");
+            if (fruitId != null) {
+                sql.append(" AND fruit_id = ?");
             }
 
             pstmt = conn.prepareStatement(sql.toString());
             int index = 1;
-            if (shuiguomingcheng != null && !shuiguomingcheng.isEmpty()) {
-                pstmt.setString(index++, "%" + shuiguomingcheng + "%");
+            if (title != null && !title.isEmpty()) {
+                pstmt.setString(index++, "%" + title + "%");
             }
-            if (chandi != null && !chandi.isEmpty()) {
-                pstmt.setString(index++, "%" + chandi + "%");
-            }
-            if (shuiguofenlei != null && !shuiguofenlei.isEmpty()) {
-                pstmt.setString(index++, "%" + shuiguofenlei + "%");
+            if (fruitId != null) {
+                pstmt.setInt(index++, fruitId);
             }
 
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 PromotionEntity p = new PromotionEntity();
                 p.setId(rs.getInt("id"));
-                p.setAddtime(rs.getTimestamp("addtime"));
-                p.setShuiguomingcheng(rs.getString("shuiguomingcheng"));
-                p.setShuiguofenlei(rs.getString("shuiguofenlei"));
-                p.setChandi(rs.getString("chandi"));
-                p.setPrice(rs.getDouble("price")); // 读 price
+                p.setFruitId(rs.getInt("fruit_id"));
+                p.setTitle(rs.getString("title"));
+                p.setDiscountPrice(rs.getDouble("discount_price"));
+                p.setStartTime(rs.getTimestamp("start_time"));
+                p.setEndTime(rs.getTimestamp("end_time"));
                 list.add(p);
             }
         } catch (Exception e) {
@@ -62,52 +56,20 @@ public class PromotionDao {
         return list;
     }
 
-    // 新增：带 price（数据库已有 NOT NULL，必须传）
- // 新增：带 price + 自动添加时间
+    // 新增促销
     public int addPromotion(PromotionEntity p) {
         int rows = 0;
         Connection conn = null;
         PreparedStatement pstmt = null;
         try {
             conn = DBUtil.getConnection();
-            
-            // 1. 临时关闭外键约束
-            conn.createStatement().execute("SET FOREIGN_KEY_CHECKS = 0;");
-            
-            // 2. 执行插入（现在不会再被外键拦截了）
-            String sql = "INSERT INTO cuxiaohuodong(shuiguomingcheng, shuiguofenlei, chandi, price, addtime) VALUES(?,?,?,?,NOW())";
+            String sql = "INSERT INTO cuxiaohuodong(fruit_id, title, discount_price, start_time, end_time) VALUES(?,?,?,?,?)";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, p.getShuiguomingcheng());
-            pstmt.setString(2, p.getShuiguofenlei());
-            pstmt.setString(3, p.getChandi());
-            pstmt.setDouble(4, p.getPrice());
-            
-            rows = pstmt.executeUpdate();
-            
-            // 3. 插入完成后，重新开启外键约束
-            conn.createStatement().execute("SET FOREIGN_KEY_CHECKS = 1;");
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            DBUtil.closeJDBC(null, pstmt, conn);
-        }
-        return rows;
-    }
-    // 修改：带 price
-    public int updatePromotion(PromotionEntity p) {
-        int rows = 0;
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = DBUtil.getConnection();
-            String sql = "UPDATE cuxiaohuodong SET shuiguomingcheng=?, shuiguofenlei=?, chandi=?, price=? WHERE id=?";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, p.getShuiguomingcheng());
-            pstmt.setString(2, p.getShuiguofenlei());
-            pstmt.setString(3, p.getChandi());
-            pstmt.setDouble(4, p.getPrice()); // 更新 price
-            pstmt.setInt(5, p.getId());
+            pstmt.setInt(1, p.getFruitId());
+            pstmt.setString(2, p.getTitle());
+            pstmt.setDouble(3, p.getDiscountPrice());
+            pstmt.setTimestamp(4, new java.sql.Timestamp(p.getStartTime().getTime()));
+            pstmt.setTimestamp(5, new java.sql.Timestamp(p.getEndTime().getTime()));
             rows = pstmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,7 +79,31 @@ public class PromotionDao {
         return rows;
     }
 
-    // 删除（不变）
+    // 修改促销
+    public int updatePromotion(PromotionEntity p) {
+        int rows = 0;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DBUtil.getConnection();
+            String sql = "UPDATE cuxiaohuodong SET fruit_id=?, title=?, discount_price=?, start_time=?, end_time=? WHERE id=?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, p.getFruitId());
+            pstmt.setString(2, p.getTitle());
+            pstmt.setDouble(3, p.getDiscountPrice());
+            pstmt.setTimestamp(4, new java.sql.Timestamp(p.getStartTime().getTime()));
+            pstmt.setTimestamp(5, new java.sql.Timestamp(p.getEndTime().getTime()));
+            pstmt.setInt(6, p.getId());
+            rows = pstmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.closeJDBC(null, pstmt, conn);
+        }
+        return rows;
+    }
+
+    // 删除促销
     public int deletePromotion(int id) {
         int rows = 0;
         Connection conn = null;
@@ -136,7 +122,7 @@ public class PromotionDao {
         return rows;
     }
 
-    // 根据ID查询（带 price）
+    // 根据ID查询
     public PromotionEntity getPromotionById(int id) {
         PromotionEntity p = null;
         Connection conn = null;
@@ -144,18 +130,18 @@ public class PromotionDao {
         ResultSet rs = null;
         try {
             conn = DBUtil.getConnection();
-            String sql = "SELECT id, addtime, shuiguomingcheng, shuiguofenlei, chandi, price FROM cuxiaohuodong WHERE id=?";
+            String sql = "SELECT id, fruit_id, title, discount_price, start_time, end_time FROM cuxiaohuodong WHERE id=?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, id);
             rs = pstmt.executeQuery();
             if (rs.next()) {
                 p = new PromotionEntity();
                 p.setId(rs.getInt("id"));
-                p.setAddtime(rs.getTimestamp("addtime"));
-                p.setShuiguomingcheng(rs.getString("shuiguomingcheng"));
-                p.setShuiguofenlei(rs.getString("shuiguofenlei"));
-                p.setChandi(rs.getString("chandi"));
-                p.setPrice(rs.getDouble("price"));
+                p.setFruitId(rs.getInt("fruit_id"));
+                p.setTitle(rs.getString("title"));
+                p.setDiscountPrice(rs.getDouble("discount_price"));
+                p.setStartTime(rs.getTimestamp("start_time"));
+                p.setEndTime(rs.getTimestamp("end_time"));
             }
         } catch (Exception e) {
             e.printStackTrace();

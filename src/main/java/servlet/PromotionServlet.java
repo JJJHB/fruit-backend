@@ -18,7 +18,9 @@ import dao.PromotionDao;
 public class PromotionServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private PromotionDao dao = new PromotionDao();
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    // 改成兼容前端的格式
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -34,28 +36,28 @@ public class PromotionServlet extends HttpServlet {
                 if (p != null) {
                     JSONObject obj = new JSONObject();
                     obj.put("id", p.getId());
-                    obj.put("addtime", sdf.format(p.getAddtime()));
-                    obj.put("shuiguomingcheng", p.getShuiguomingcheng());
-                    obj.put("shuiguofenlei", p.getShuiguofenlei());
-                    obj.put("chandi", p.getChandi());
-                    obj.put("price", p.getPrice()); // 返回 price
+                    obj.put("fruitId", p.getFruitId());
+                    obj.put("title", p.getTitle());
+                    obj.put("discountPrice", p.getDiscountPrice());
+                    obj.put("startTime", sdf.format(p.getStartTime()));
+                    obj.put("endTime", sdf.format(p.getEndTime()));
                     result.put("data", obj);
                 }
             } else {
-                String name = request.getParameter("shuiguomingcheng");
-                String chandi = request.getParameter("chandi");
-                String fenlei = request.getParameter("shuiguofenlei");
-                List<PromotionEntity> list = dao.getPromotionByCondition(name, chandi, fenlei);
+                String title = request.getParameter("title");
+                String fruitIdStr = request.getParameter("fruitId");
+                Integer fruitId = (fruitIdStr != null && !fruitIdStr.isEmpty()) ? Integer.parseInt(fruitIdStr) : null;
+                List<PromotionEntity> list = dao.getPromotionByCondition(title, fruitId);
 
                 JSONArray array = new JSONArray();
                 for (PromotionEntity p : list) {
                     JSONObject obj = new JSONObject();
                     obj.put("id", p.getId());
-                    obj.put("addtime", sdf.format(p.getAddtime()));
-                    obj.put("shuiguomingcheng", p.getShuiguomingcheng());
-                    obj.put("shuiguofenlei", p.getShuiguofenlei());
-                    obj.put("chandi", p.getChandi());
-                    obj.put("price", p.getPrice());
+                    obj.put("fruitId", p.getFruitId());
+                    obj.put("title", p.getTitle());
+                    obj.put("discountPrice", p.getDiscountPrice());
+                    obj.put("startTime", sdf.format(p.getStartTime()));
+                    obj.put("endTime", sdf.format(p.getEndTime()));
                     array.add(obj);
                 }
                 result.put("promotions", array);
@@ -72,8 +74,8 @@ public class PromotionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	request.setCharacterEncoding("UTF-8");
-    	response.setContentType("application/json; charset=utf-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         JSONObject result = new JSONObject();
 
@@ -82,17 +84,19 @@ public class PromotionServlet extends HttpServlet {
 
             if ("update".equals(action)) {
                 int id = Integer.parseInt(request.getParameter("id"));
-                String name = request.getParameter("shuiguomingcheng");
-                String fenlei = request.getParameter("shuiguofenlei");
-                String chandi = request.getParameter("chandi");
-                Double price = Double.parseDouble(request.getParameter("price")); // 接收 price
+                int fruitId = Integer.parseInt(request.getParameter("fruitId"));
+                String title = request.getParameter("title");
+                double discountPrice = Double.parseDouble(request.getParameter("discountPrice"));
+                String startTimeStr = request.getParameter("startTime");
+                String endTimeStr = request.getParameter("endTime");
 
                 PromotionEntity p = new PromotionEntity();
                 p.setId(id);
-                p.setShuiguomingcheng(name);
-                p.setShuiguofenlei(fenlei);
-                p.setChandi(chandi);
-                p.setPrice(price);
+                p.setFruitId(fruitId);
+                p.setTitle(title);
+                p.setDiscountPrice(discountPrice);
+                p.setStartTime(sdf.parse(startTimeStr));
+                p.setEndTime(sdf.parse(endTimeStr));
 
                 int count = dao.updatePromotion(p);
                 if (count > 0) {
@@ -105,16 +109,18 @@ public class PromotionServlet extends HttpServlet {
 
             } else {
                 // 新增
-                String name = request.getParameter("shuiguomingcheng");
-                String fenlei = request.getParameter("shuiguofenlei");
-                String chandi = request.getParameter("chandi");
-                Double price = Double.parseDouble(request.getParameter("price"));
+                int fruitId = Integer.parseInt(request.getParameter("fruitId"));
+                String title = request.getParameter("title");
+                double discountPrice = Double.parseDouble(request.getParameter("discountPrice"));
+                String startTimeStr = request.getParameter("startTime");
+                String endTimeStr = request.getParameter("endTime");
 
                 PromotionEntity p = new PromotionEntity();
-                p.setShuiguomingcheng(name);
-                p.setShuiguofenlei(fenlei);
-                p.setChandi(chandi);
-                p.setPrice(price);
+                p.setFruitId(fruitId);
+                p.setTitle(title);
+                p.setDiscountPrice(discountPrice);
+                p.setStartTime(sdf.parse(startTimeStr));
+                p.setEndTime(sdf.parse(endTimeStr));
 
                 int count = dao.addPromotion(p);
                 if (count > 0) {
