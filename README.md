@@ -21,3 +21,4 @@ newstype新闻分类表
 config系统配置表（轮播图、网站配置等）
 address用户收货地址表
 chargerecord充值记录表
+
