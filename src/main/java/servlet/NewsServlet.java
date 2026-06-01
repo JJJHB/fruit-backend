@@ -16,11 +16,9 @@ import java.util.Map;
 
 @WebServlet("/NewsServlet")
 public class NewsServlet extends HttpServlet {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private NewsDao newsDao = new NewsDao();
+    
+    private static final long serialVersionUID = 1L;
+    private NewsDao newsDao = new NewsDao();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -44,6 +42,12 @@ public class NewsServlet extends HttpServlet {
             case "list":
                 executeList(request, response);
                 break;
+            case "add":
+                executeAdd(request, response);
+                break;
+            case "update":
+                executeUpdate(request, response);
+                break;
             case "delete":
                 executeDelete(request, response);
                 break;
@@ -59,10 +63,62 @@ public class NewsServlet extends HttpServlet {
         response.getWriter().write(JSON.toJSONString(list));
     }
 
+    // ✨ 新增：处理添加公告逻辑（仅限第一版字段）
+    private void executeAdd(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+        
+        Map<String, Object> resultMap = new HashMap<>();
+        NewsEntity news = new NewsEntity();
+        news.setTitle(title);
+        news.setContent(content);
+
+        boolean success = newsDao.addNews(news);
+        if (success) {
+            resultMap.put("code", 200);
+            resultMap.put("msg", "添加成功");
+        } else {
+            resultMap.put("code", 500);
+            resultMap.put("msg", "添加失败");
+        }
+        response.getWriter().write(JSON.toJSONString(resultMap));
+    }
+
+    // ✨ 新增：处理修改公告逻辑（仅限第一版字段）
+    private void executeUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String idStr = request.getParameter("id");
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+
+        Map<String, Object> resultMap = new HashMap<>();
+        
+        if (idStr != null && !idStr.trim().isEmpty()) {
+            Long id = Long.parseLong(idStr);
+            NewsEntity news = new NewsEntity();
+            news.setId(id);
+            news.setTitle(title);
+            news.setContent(content);
+
+            boolean success = newsDao.updateNews(news);
+            if (success) {
+                resultMap.put("code", 200);
+                resultMap.put("msg", "修改成功");
+            } else {
+                resultMap.put("code", 500);
+                resultMap.put("msg", "修改失败");
+            }
+        } else {
+            resultMap.put("code", 400);
+            resultMap.put("msg", "请求参数错误，缺少必要参数 id");
+        }
+        response.getWriter().write(JSON.toJSONString(resultMap));
+    }
+
     private void executeDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idStr = request.getParameter("id");
         Map<String, Object> resultMap = new HashMap<>();
-        if (idStr != null) {
+        
+        if (idStr != null && !idStr.trim().isEmpty()) {
             Long id = Long.parseLong(idStr);
             boolean success = newsDao.deleteNewsById(id);
             if (success) {
@@ -72,6 +128,9 @@ public class NewsServlet extends HttpServlet {
                 resultMap.put("code", 500);
                 resultMap.put("msg", "删除失败");
             }
+        } else {
+            resultMap.put("code", 400);
+            resultMap.put("msg", "请求参数错误，缺少必要参数 id");
         }
         response.getWriter().write(JSON.toJSONString(resultMap));
     }
