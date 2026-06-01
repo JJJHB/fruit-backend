@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk11.0.29">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v9.0">
 		<attributes>
@@ -27,5 +22,6 @@
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/taglibs-standard-jstlel-1.2.1.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/taglibs-standard-spec-1.2.1.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/fastjson-1.2.83.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
