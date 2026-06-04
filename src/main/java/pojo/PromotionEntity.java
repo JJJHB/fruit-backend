@@ -1,18 +1,14 @@
 package pojo;
-
 import java.util.Date;
 
 public class PromotionEntity {
     private Integer id;
-    private Integer fruitId;      // 对应 fruit_id
-    private String title;         // 对应 title
-    private Double discountPrice; // 对应 discount_price
-    private Date startTime;       // 对应 start_time
-    private Date endTime;         // 对应 end_time
+    private Integer fruitId;
+    private String title;
+    private Double discountPrice;
+    private Date startTime;
+    private Date endTime;
 
-    public PromotionEntity() {}
-
-    // Getter / Setter
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
