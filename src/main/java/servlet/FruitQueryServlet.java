@@ -50,8 +50,9 @@ public class FruitQueryServlet extends HttpServlet {
             json.append("\"categoryId\":").append(fruit.getCategoryId() == null ? 0 : fruit.getCategoryId()).append(",");
             json.append("\"picture\":\"").append(fruit.getPicture() == null ? "" : fruit.getPicture()).append("\",");
             json.append("\"detail\":\"").append(fruit.getDetail() == null ? "" : fruit.getDetail()).append("\",");
-            json.append("\"clicknum\":").append(fruit.getClicknum() == null ? 0 : fruit.getClicknum());
-
+            json.append("\"clicknum\":").append(fruit.getClicknum() == null ? 0 : fruit.getClicknum()).append(",");
+            json.append("\"categoryName\":\"").append(fruit.getCategoryName()==null?"":fruit.getCategoryName()).append("\"");
+            
             json.append("}");
             if (i != fruitList.size() - 1) {
                 json.append(",");
