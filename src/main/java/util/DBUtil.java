@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class DBUtil {
     static String user = "root";
-    static String password = "root";
+    static String password = "123456";
     // 适配MySQL8+加时区，5.7也能兼容
     static String url = "jdbc:mysql://localhost:3306/fruitshop?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai";
 
