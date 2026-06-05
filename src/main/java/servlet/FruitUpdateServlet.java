@@ -47,7 +47,7 @@ public class FruitUpdateServlet extends HttpServlet {
         // 分类ID校验
         Integer cid = fruit.getCategoryId();
         if (cid == null || cid <= 0) {
-            response.getWriter().write("{\"code\":500,\"msg\":\"分类ID不能为空或小于等于0\"}");
+            response.getWriter().write("{\"code\":500,\"msg\":\"分类不能为空\"}");
             return;
         }
 

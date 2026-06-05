@@ -9,11 +9,18 @@ public class ShuiguoxinxiEntity {
     private String picture;
     private String detail;
     private Integer clicknum;
+    private String categoryName;
 
     // 无参构造
     public ShuiguoxinxiEntity() {}
 
     // Getter & Setter
+    public String getCategoryName() {
+        return categoryName;
+    }
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
     public Long getId() {
         return id;
     }

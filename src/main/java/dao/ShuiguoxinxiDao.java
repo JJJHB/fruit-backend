@@ -16,7 +16,9 @@ public class ShuiguoxinxiDao {
         Statement stmt = null;
         ResultSet rs = null;
 
-        String sql = "SELECT id, name, price, stock, category_id, picture, detail, clicknum FROM shuiguoxinxi";
+        String sql = "SELECT s.*, c.name AS categoryName " +
+                "FROM shuiguoxinxi s " +
+                "LEFT JOIN shuiguofenlei c ON s.category_id = c.id";
 
         try {
             stmt = conn.createStatement();
@@ -31,7 +33,8 @@ public class ShuiguoxinxiDao {
                 obj.setPicture(rs.getString("picture"));
                 obj.setDetail(rs.getString("detail"));
                 obj.setClicknum(rs.getInt("clicknum"));
-
+                obj.setCategoryName(rs.getString("categoryName"));
+                
                 list.add(obj);
             }
         } catch (SQLException e) {
@@ -50,12 +53,14 @@ public class ShuiguoxinxiDao {
         ResultSet rs = null;
 
         try {
+            //联表查询，带出categoryName
             StringBuilder sql = new StringBuilder(
-                "SELECT id, name, price, stock, category_id, picture, detail, clicknum FROM shuiguoxinxi WHERE 1=1 "
+                "SELECT s.*, c.name AS categoryName FROM shuiguoxinxi s " +
+                "LEFT JOIN shuiguofenlei c ON s.category_id = c.id WHERE 1=1 "
             );
 
             if (name != null && !name.trim().isEmpty()) {
-                sql.append("AND name LIKE ? ");
+                sql.append("AND s.name LIKE ? ");
             }
             if (minPrice != null && !minPrice.trim().isEmpty()) {
                 sql.append("AND price >= ? ");
@@ -89,6 +94,8 @@ public class ShuiguoxinxiDao {
                 obj.setPicture(rs.getString("picture"));
                 obj.setDetail(rs.getString("detail"));
                 obj.setClicknum(rs.getInt("clicknum"));
+                obj.setCategoryName(rs.getString("categoryName"));
+                
                 list.add(obj);
             }
 
