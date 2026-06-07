@@ -1,21 +1,21 @@
 # ==========================================
-# Java Web(Eclipse Dynamic Web Project)
+# Java Web (Eclipse Dynamic Web Project)
 # ==========================================
 
-# 编译结果
+# 编译输出目录（不要提交）
 build/
 bin/
 out/
 target/
 *.class
 
-# IDEA
+# IntelliJ IDEA 配置文件
 .idea/
 *.iml
 *.ipr
 *.iws
 
-# 系统文件
+# 系统生成文件
 .DS_Store
 Thumbs.db
 
@@ -25,10 +25,10 @@ Thumbs.db
 *.swp
 *~
 
-# 保留 Eclipse 项目配置
-!.project
-!.classpath
-!.settings/
+# Eclipse 项目配置（保留本地，但不提交到 GitHub）
+.project
+.classpath
+.settings/
 
 # 如果以后 upload 改为运行时生成，再取消注释
 # src/main/webapp/upload/
