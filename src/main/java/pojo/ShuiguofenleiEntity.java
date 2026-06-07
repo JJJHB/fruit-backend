@@ -1,49 +1,47 @@
 package pojo;
 
-import java.util.Date;
-
 public class ShuiguofenleiEntity {
-    // 对应数据库的 id
-    private Long id;
-    // 对应数据库的 addtime
-    private Date addtime;
-    // 对应数据库的 shuiguofenlei
-    private String shuiguofenlei;
+    // 对应数据库 id (int)
+    private Integer id;
+    // 对应数据库 name (varchar(50)) —— 分类名称
+    private String name;
+    // 对应数据库 description (varchar(255)) —— 分类描述
+    private String description;
 
-    // 无参构造（建议加上）
+    // 无参构造（必须保留）
     public ShuiguofenleiEntity() {
     }
 
     // 全参构造（可选，方便创建对象）
-    public ShuiguofenleiEntity(Long id, Date addtime, String shuiguofenlei) {
+    public ShuiguofenleiEntity(Integer id, String name, String description) {
         this.id = id;
-        this.addtime = addtime;
-        this.shuiguofenlei = shuiguofenlei;
+        this.name = name;
+        this.description = description;
     }
 
-    // Getter & Setter
-    public Long getId() {
+    // Getter & Setter（与数据库字段一一对应）
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Date getAddtime() {
-        return addtime;
+    public String getName() {
+        return name;
     }
 
-    public void setAddtime(Date addtime) {
-        this.addtime = addtime;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getShuiguofenlei() {
-        return shuiguofenlei;
+    public String getDescription() {
+        return description;
     }
 
-    public void setShuiguofenlei(String shuiguofenlei) {
-        this.shuiguofenlei = shuiguofenlei;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     // 可选：toString 方法，方便打印日志
@@ -51,8 +49,8 @@ public class ShuiguofenleiEntity {
     public String toString() {
         return "ShuiguofenleiEntity{" +
                 "id=" + id +
-                ", addtime=" + addtime +
-                ", shuiguofenlei='" + shuiguofenlei + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

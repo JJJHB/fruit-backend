@@ -2,6 +2,7 @@ package servlet;
 
 import com.alibaba.fastjson.JSON;
 import dao.ShuiguoxinxiDao;
+import dao.ShuiguofenleiDao;
 import pojo.ShuiguoxinxiEntity;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Set;
 
 @WebServlet("/fruitUpdate")
 public class FruitUpdateServlet extends HttpServlet {
@@ -36,31 +38,30 @@ public class FruitUpdateServlet extends HttpServlet {
 
         ShuiguoxinxiEntity fruit = JSON.parseObject(sb.toString(), ShuiguoxinxiEntity.class);
 
-        // ===================== 分类验证 =====================
-        String[] validCategories = {
-            "水果分类1","水果分类2","水果分类3","水果分类4",
-            "水果分类5","水果分类6","水果分类7","水果分类8"
-        };
-        boolean isValid = false;
-        for (String category : validCategories) {
-            if (category.equals(fruit.getShuiguofenlei())) {
-                isValid = true;
-                break;
-            }
-        }
-
-        // 如果分类不对，直接返回错误
-        if (!isValid) {
-            response.getWriter().write("{\"code\":500,\"msg\":\"分类只能是 水果分类1-8\"}");
+        // 主键ID非空校验
+        if (fruit.getId() == null) {
+            response.getWriter().write("{\"code\":500,\"msg\":\"数据ID不能为空\"}");
             return;
         }
-		// ====================================================
 
-        // 分类正确，执行修改
+        // 分类ID校验
+        Integer cid = fruit.getCategoryId();
+        if (cid == null || cid <= 0) {
+            response.getWriter().write("{\"code\":500,\"msg\":\"分类不能为空\"}");
+            return;
+        }
+
+        // 动态校验分类ID是否存在于数据库
+        ShuiguofenleiDao fenleiDao = new ShuiguofenleiDao();
+        Set<Integer> validCategoryIds = fenleiDao.getAllCategoryIds();
+        if (!validCategoryIds.contains(cid)) {
+            response.getWriter().write("{\"code\":500,\"msg\":\"分类ID不存在，请使用数据表中的有效分类\"}");
+            return;
+        }
+
+        // 执行修改
         ShuiguoxinxiDao dao = new ShuiguoxinxiDao();
         dao.updateFruit(fruit);
-
-        // 返回成功
         response.getWriter().write("{\"code\":200,\"msg\":\"修改成功\"}");
     }
 }
