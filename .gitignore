@@ -1,35 +1,35 @@
-# ==================================================================== 
-# Java Web / 多 IDE 项目通用 .gitignore 配置
-# ====================================================================
+# ==========================================
+# Java Web(Eclipse Dynamic Web Project)
+# ==========================================
 
-# 1. 忽略编译输出目录（build/classes/bin/out/target）
+# 编译结果
 build/
 bin/
-target/
 out/
+target/
 *.class
 
-# 2. 忽略 IntelliJ IDEA 的本地工作区配置
+# IDEA
 .idea/
 *.iml
 *.ipr
 *.iws
 
-# 3. Eclipse 配置文件（保留在仓库中，保证 Dynamic Web Project 正常）
-!.project
-!.classpath
-!.settings/
-
-# 4. 操作系统临时文件
+# 系统文件
 .DS_Store
 Thumbs.db
 
-# 5. 临时/缓存文件
+# 临时文件
 *.log
 *.tmp
 *.swp
 *~
 
-# 6. 可选：运行时上传文件夹（如果 upload 是动态生成，可忽略）
+# 保留 Eclipse 项目配置
+!.project
+!.classpath
+!.settings/
+
+# 如果以后 upload 改为运行时生成，再取消注释
 # src/main/webapp/upload/
 # !src/main/webapp/upload/.gitkeep
