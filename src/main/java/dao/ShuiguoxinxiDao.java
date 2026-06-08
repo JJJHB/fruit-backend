@@ -157,4 +157,29 @@ public class ShuiguoxinxiDao {
             e.printStackTrace();
         }
     }
+ // 在 ShuiguoxinxiDao.java 中添加
+    public ShuiguoxinxiEntity getFruitById(int id) {
+        String sql = "SELECT * FROM shuiguoxinxi WHERE id=?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    ShuiguoxinxiEntity fruit = new ShuiguoxinxiEntity();
+                    fruit.setId(rs.getLong("id"));
+                    fruit.setName(rs.getString("name"));
+                    fruit.setPrice(rs.getDouble("price"));
+                    fruit.setStock(rs.getInt("stock"));
+                    fruit.setCategoryId(rs.getInt("category_id"));
+                    fruit.setPicture(rs.getString("picture"));
+                    fruit.setDetail(rs.getString("detail"));
+                    fruit.setClicknum(rs.getInt("clicknum"));
+                    return fruit;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
