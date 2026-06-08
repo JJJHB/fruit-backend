@@ -2,8 +2,8 @@ package servlet;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import dao.UserDao;
-import pojo.UserEntity;
+import dao.ConfigDao;
+import pojo.ConfigEntity;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,19 +12,19 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet("/userQueryList")
-public class UserQueryListServlet extends HttpServlet {
+@WebServlet("/configQuery")
+public class ConfigQueryServlet extends HttpServlet {
 
-    private UserDao userDao = new UserDao();
+    private final ConfigDao dao = new ConfigDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req, resp);
+        doPost(req, resp); // GET 和 POST 都走同一逻辑
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // CORS 跨域支持
+        // CORS 跨域支持（如果需要前端跨域访问）
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
         resp.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -36,12 +36,15 @@ public class UserQueryListServlet extends HttpServlet {
             return;
         }
 
-        List<UserEntity> users = userDao.getAllUsers();
-        JSONArray ja = JSONArray.fromObject(users);
+        List<ConfigEntity> configs = dao.findAll();
 
+        // 把 List 转 JSONArray
+        JSONArray ja = JSONArray.fromObject(configs);
+
+        // 可以封装成一个 JSON 对象返回
         JSONObject result = new JSONObject();
-        result.put("users", ja);
-        result.put("total", users.size());
+        result.put("configs", ja);
+        result.put("total", configs.size());
 
         PrintWriter out = resp.getWriter();
         out.print(result.toString());

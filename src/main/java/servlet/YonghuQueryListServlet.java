@@ -2,8 +2,8 @@ package servlet;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import pojo.UsersEntity;
-import dao.UserDao;
+import pojo.YonghuEntity; // 实体类对应 UsersEntity
+import dao.YonghuDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,35 +14,24 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet("/userQueryList")
-public class UserQueryListServlet extends HttpServlet {
+@WebServlet("/yonghuQueryList")
+public class YonghuQueryListServlet extends HttpServlet {
 
-    private UserDao usersDao = new UserDao();
+    private YonghuDao yonghuDao = new YonghuDao();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doPost(req, resp);
-    }
-// hello
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 设置响应类型为 JSON
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
         resp.setContentType("application/json;charset=utf-8");
 
-        // 获取所有用户
-        List<UsersEntity> users = usersDao.getAllUsers();
+        List<YonghuEntity> users = yonghuDao.getAllUsers();
 
-        // 转换为 JSONArray
         JSONArray ja = JSONArray.fromObject(users);
 
-        // 包装成一个 JSON 对象
         JSONObject result = new JSONObject();
         result.put("users", ja);
-        result.put("total", users.size()); // 总条数
+        result.put("total", users.size());
 
-        PrintWriter out = resp.getWriter();
-        out.print(result.toString());
-        out.flush();
-        out.close();
+        resp.getWriter().print(result);
     }
 }

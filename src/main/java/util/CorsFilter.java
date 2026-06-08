@@ -6,8 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter("/userQueryList") // 或 "/api/*" 如果后端接口统一前缀
-public class CorsFilter implements Filter {
+@WebFilter("/*")
+public class CorsFilter implements Filter { // 或 "/api/*" 如果后端接口统一前缀
+
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
