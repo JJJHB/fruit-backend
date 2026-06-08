@@ -1,25 +1,27 @@
-# ====================================================================
-# Java 考研/Full-stack 项目通用 .gitignore 配置
-# ====================================================================
-
-# 1. 忽略编译输出目录（给计算机运行的成品/半成品，绝对不要交）
+# 编译输出目录（不要提交）
 build/
 bin/
-target/
 out/
+target/
 *.class
 
-# 2. 忽略 IntelliJ IDEA 的本地工作区配置
+# IntelliJ IDEA 配置文件
 .idea/
 *.iml
 *.ipr
 *.iws
 
-# 3. 忽略 Eclipse 的本地环境偏好设置
-.settings/
-.classpath
-.project
-
-# 4. 忽略操作系统临时文件
+# 系统生成文件
 .DS_Store
 Thumbs.db
+
+# 临时文件
+*.log
+*.tmp
+*.swp
+*~
+
+# Eclipse 项目配置（保留本地，但不提交到 GitHub）
+.project
+.classpath
+.settings/
