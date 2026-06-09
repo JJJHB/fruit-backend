@@ -19,45 +19,26 @@ public class DBUtil {
         try {
             // MySQL 5 驱动类
             Class.forName("com.mysql.jdbc.Driver");
+
+            conn = DriverManager.getConnection(url, user, password);
+            System.out.println("数据库连接成功: " + conn);
+
         } catch (ClassNotFoundException e) {
             System.err.println("数据库驱动类未找到，请检查 jar 包是否存在！");
             e.printStackTrace();
-        }
 
-        try {
-            conn = DriverManager.getConnection(url, user, password);
-            System.out.println("数据库连接成功: " + conn);
         } catch (SQLException e) {
             System.err.println("获取数据库连接失败，请检查 URL/用户名/密码/数据库状态！");
             e.printStackTrace();
         }
+
         return conn;
     }
 
     // 释放资源
     public static void closeJDBC(ResultSet rs, Statement stmt, Connection conn) {
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (stmt != null) {
-            try {
-                stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        try { if (rs != null) rs.close(); } catch (SQLException ignored) {}
+        try { if (stmt != null) stmt.close(); } catch (SQLException ignored) {}
+        try { if (conn != null) conn.close(); } catch (SQLException ignored) {}
     }
 }
