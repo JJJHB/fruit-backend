@@ -157,4 +157,19 @@ public class ShuiguoxinxiDao {
             e.printStackTrace();
         }
     }
+    
+   
+      // 水果点击量 +1
+    public int addClickNum(int fruitId) {
+        String sql = "UPDATE shuiguoxinxi SET clicknum = clicknum + 1 WHERE id = ?";
+        try (java.sql.Connection conn = util.DBUtil.getConnection();
+             java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, fruitId);
+            return pstmt.executeUpdate();
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }
